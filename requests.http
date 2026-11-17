@@ -1,0 +1,68 @@
+### Запити для розширення REST Client (VS Code). Сервер: go run .
+@base = http://localhost:8080/api/v1
+
+### 1. Створення інциденту (201 Created)
+POST {{base}}/incidents
+Content-Type: application/json
+
+{"title":"Overheating on Gateway-01","description":"Core temperature reached 85C","priority":"critical"}
+
+### 2. Невалідний пріоритет (400 Bad Request)
+POST {{base}}/incidents
+Content-Type: application/json
+
+{"title":"Disk failure","description":"RAID degraded","priority":"urgent"}
+
+### 3. Короткий заголовок і відсутній опис (400 Bad Request)
+POST {{base}}/incidents
+Content-Type: application/json
+
+{"title":"ab","priority":"low"}
+
+### 4. Список інцидентів (200 OK)
+GET {{base}}/incidents
+
+### 5. Інцидент за ID (200 OK)
+GET {{base}}/incidents/1
+
+### 6. Неіснуючий інцидент (404 Not Found)
+GET {{base}}/incidents/999
+
+### 7. Зміна статусу (200 OK)
+PATCH {{base}}/incidents/1/status
+Content-Type: application/json
+
+{"status":"in_progress"}
+
+### 8. Невалідний статус (400 Bad Request)
+PATCH {{base}}/incidents/1/status
+Content-Type: application/json
+
+{"status":"done"}
+
+### 9. Видалення (204 No Content)
+DELETE {{base}}/incidents/1
+
+### 10. Реєстрація (201 Created)
+POST {{base}}/auth/register
+Content-Type: application/json
+
+{"email":"engineer@company.internal","password":"SuperSecretPassword123"}
+
+### 11. Повторна реєстрація (409 Conflict)
+POST {{base}}/auth/register
+Content-Type: application/json
+
+{"email":"engineer@company.internal","password":"SuperSecretPassword123"}
+
+### 12. Вхід (200 OK + JWT)
+POST {{base}}/auth/login
+Content-Type: application/json
+
+{"email":"engineer@company.internal","password":"SuperSecretPassword123"}
+
+### 13. Невірний пароль (401 Unauthorized)
+POST {{base}}/auth/login
+Content-Type: application/json
+
+{"email":"engineer@company.internal","password":"WrongPassword"}
